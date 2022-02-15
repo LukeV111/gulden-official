@@ -94,6 +94,14 @@
 
     <portal to="footer-slot">
       <section class="footer">
+        <span
+          class="button"
+          @click="showLinkHoldingAccount"
+          v-if="linkHoldingAccountVisible"
+        >
+          <fa-icon :icon="['fal', 'key']" />
+          {{ $t("buttons.holding_key") }}
+        </span>
         <span class="button" @click="renewAccount" v-if="renewButtonVisible">
           <fa-icon :icon="['fal', 'redo-alt']" />
           {{ $t("buttons.renew") }}
@@ -120,6 +128,7 @@ import { WitnessController } from "../../../unity/Controllers";
 import EventBus from "../../../EventBus";
 import Send from "../MiningAccount/Send";
 import RenewAccount from "./RenewAccount";
+import LinkHoldingAccount from "./LinkHoldingAccount";
 import AccountSettings from "../AccountSettings";
 
 let timeout;
@@ -194,6 +203,9 @@ export default {
       return (
         this.accountStatus === "expired" && this.rightSidebar !== RenewAccount
       );
+    },
+    linkHoldingAccountVisible() {
+      return this.rightSidebar !== LinkHoldingAccount;
     }
   },
   mounted() {
@@ -255,6 +267,9 @@ export default {
     },
     renewAccount() {
       this.rightSidebar = RenewAccount;
+    },
+    showLinkHoldingAccount() {
+      this.rightSidebar = LinkHoldingAccount;
     }
   }
 };
@@ -266,22 +281,18 @@ export default {
     width: calc(100% - 26px);
     padding-right: 10px;
   }
-
   & > .settings {
     font-size: 16px;
     padding: calc((var(--header-height) - 40px) / 2) 0;
-
     & span {
       padding: 10px;
       cursor: pointer;
-
       &:hover {
         background: #f5f5f5;
       }
     }
   }
 }
-
 .holding-information {
   & .flex-row > div {
     line-height: 18px;
@@ -290,17 +301,14 @@ export default {
     min-width: 220px;
   }
 }
-
 // todo: .footer styles below are copy/pasted from SpendingAccount/index.vue, maybe move to parent
 .footer {
   text-align: center;
   line-height: calc(var(--footer-height) - 1px);
-
   & svg {
     font-size: 14px;
     margin-right: 5px;
   }
-
   & .button {
     display: inline-block;
     padding: 0 20px 0 20px;
@@ -310,7 +318,6 @@ export default {
     color: var(--primary-color);
     text-align: center;
     cursor: pointer;
-
     &:hover {
       background-color: #f5f5f5;
     }
